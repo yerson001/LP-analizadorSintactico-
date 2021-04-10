@@ -3,19 +3,10 @@
 <body>
 <center>
     <p>Analizador Sintactico DO WHILE</p>
-
     <form id="formulario" name="formulario">
       Input: <input type="text" name="entrada" id="entrada"><br><br>
       <input type="button" onclick="main()" value="Analizar">
     </form>
-    <hgroup>
-      <h6 id="tipodato"></h6>
-      <h6 id="_do"></h6>
-      <h6 id="allave"></h6>
-      <h6 id="_while"></h6>
-      <h6 id="_parentesis"></h6>
-      <h6 id="comap"></h6>
-    </hgroup>
       <textarea id="textArea" rows="5" cols="20">
       int i=0
       do{
@@ -26,6 +17,7 @@
 
 <script>
   let Tdato = ["int","float","bool"];
+  var cont = 0;
   function Aspace(txt)
   {
      var cad = ""; 
@@ -39,6 +31,24 @@
     return cad;
   }
 
+  function show(Iden,Msg,RGB)
+  {
+   var x = document.createElement(Iden);
+   var t = document.createTextNode(" ["+cont+"] "+Msg);
+    x.appendChild(t);
+    document.body.appendChild(x);
+    cont+=1;
+
+    if(RGB == "Failed")
+    {
+        x.style.color = "red";
+    }else if(RGB == "end"){
+        x.style.color = "green";
+    }else{
+        x.style.color = "black";
+    }
+  }
+
   function main()
   {
     var txt = document.formulario.entrada.value;
@@ -48,62 +58,74 @@
     console.log(std);
     var flag=0;
     //*******tipo de valor*****
+    //innerHTML =
+    var f=0;  
     for(var i=0; i<Tdato.length; i++)
     {
       if(tipo==Tdato[i])
       {
-        tipodato.innerHTML = "Tipo_dato: ok";flag+=1;
+        show("H6","Tipo_dato: [OK]","ok");
+        flag+=1;f=1;
         break;
-      }else{
-        tipodato.innerHTML = "Tipo_dato: faile";
       }
     }
 
+    if(f==0)
+      show("H6","Tipo_dato: [Failed]","Failed");
     do_ = std.search("do");
     console.log(std.substring(do_,do_+2));
     if(std.substring(do_,do_+2) == "do" && std.substring(do_,do_+2).length>0)
     {
-      _do.innerHTML = "do: ok";flag+=1;
+      show("H6","Do: [OK]","ok");
+      flag+=1;
     }else{
-      _do.innerHTML = "do: failed";
+       show("H6","Do: [Failed]","Failed");
+       flag-=1;
     }
 
     var llava = std.search("{");
     var llavc = std.search("}");
-    if(llavc > 0 && llava > 0){
-      allave.innerHTML = "llave: ok";flag+=1;
+    if(llavc > 0 && llava > 0)
+    {
+      show("H6","Llaves: [OK]","ok");
+      flag+=1;
     }else{
       flag-=1;
-      allave.innerHTML = "llave: failed";
+      show("H6","Llaves: [Failed]","Failed");
     }
     
     _wh = std.search("while");
     if(std.substring(_wh,_wh+5) == "while")
     {
-      _while.innerHTML = "while: ok";flag+=1;
+      show("H6","While: [OK]","ok");
+      flag+=1;
     }else{
       flag-=1;
-      _while.innerHTML = "while: failed";
+      show("H6","While: [Failed]","Failed");
     }
 
     var pcoma = std.search(";");
     if(std[pcoma]==";"){
-      comap.innerHTML = "coma: ok";flag+=1;
+       show("H6","Coma: [OK]","ok");
+       flag+=1;
     }else{
       flag-=1;
-      comap.innerHTML = "coma: failed";
+      show("H6","Coma: [Failed]","Failed");
     }
 
     if(std[pcoma-1]==")" && std[_wh+5] == "("){
-      _parentesis.innerHTML = "parentesis: ok";flag+=1;
+       flag+=1;
+       show("H6","Paréntesis: [OK]","ok");
     }else{
       flag-=1;
-      _parentesis.innerHTML = "parentesis: failed";
+         show("H6","Paréntesis: [Failed]","Failed");
     }
     if(flag==6){
-      textArea.innerHTML = "Analisis Termina: Correcto";
+         show("H3","Análisis: [OK]","end");
+         textArea.innerHTML = "Sentencia Correcta";
     }else if(flag<6){
-      textArea.innerHTML = "Analisis Termina: Incorrecto";
+         show("H3","Análisis: [Failed]","Failed");
+         textArea.innerHTML = "Sentencia Incorrecta";
     }
     console.log(flag);
   }
