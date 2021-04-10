@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<body>
+<center>
+    <p>Analizador Sintactico DO WHILE</p>
+
+    <form id="formulario" name="formulario">
+      Input: <input type="text" name="entrada" id="entrada"><br><br>
+      <input type="button" onclick="main()" value="Analizar">
+    </form>
+    <hgroup>
+      <h6 id="tipodato"></h6>
+      <h6 id="_do"></h6>
+      <h6 id="allave"></h6>
+      <h6 id="_while"></h6>
+      <h6 id="_parentesis"></h6>
+      <h6 id="comap"></h6>
+    </hgroup>
+      <textarea id="textArea" rows="5" cols="20">
+      int i=0
+      do{
+      //code
+      }while(i<6);
+    </textarea>
+  </center>
+
+<script>
+  let Tdato = ["int","float","bool"];
+  function Aspace(txt)
+  {
+     var cad = ""; 
+    for(var i=0; i<txt.length; i++)
+    {
+      if(txt[i] != ' ')
+      {
+        cad+=txt[i];
+      }
+    }
+    return cad;
+  }
+
+  function main()
+  {
+    var txt = document.formulario.entrada.value;
+    var tipo = txt.substring(0,txt.search(" "));
+    console.log(tipo);
+    var std = Aspace(txt);
+    console.log(std);
+    var flag=0;
+    //*******tipo de valor*****
+    for(var i=0; i<Tdato.length; i++)
+    {
+      if(tipo==Tdato[i])
+      {
+        tipodato.innerHTML = "Tipo_dato: ok";flag+=1;
+        break;
+      }else{
+        tipodato.innerHTML = "Tipo_dato: faile";
+      }
+    }
+
+    do_ = std.search("do");
+    console.log(std.substring(do_,do_+2));
+    if(std.substring(do_,do_+2) == "do" && std.substring(do_,do_+2).length>0)
+    {
+      _do.innerHTML = "do: ok";flag+=1;
+    }else{
+      _do.innerHTML = "do: failed";
+    }
+
+    var llava = std.search("{");
+    var llavc = std.search("}");
+    if(llavc > 0 && llava > 0){
+      allave.innerHTML = "llave: ok";flag+=1;
+    }else{
+      flag-=1;
+      allave.innerHTML = "llave: failed";
+    }
+    
+    _wh = std.search("while");
+    if(std.substring(_wh,_wh+5) == "while")
+    {
+      _while.innerHTML = "while: ok";flag+=1;
+    }else{
+      flag-=1;
+      _while.innerHTML = "while: failed";
+    }
+
+    var pcoma = std.search(";");
+    if(std[pcoma]==";"){
+      comap.innerHTML = "coma: ok";flag+=1;
+    }else{
+      flag-=1;
+      comap.innerHTML = "coma: failed";
+    }
+
+    if(std[pcoma-1]==")" && std[_wh+5] == "("){
+      _parentesis.innerHTML = "parentesis: ok";flag+=1;
+    }else{
+      flag-=1;
+      _parentesis.innerHTML = "parentesis: failed";
+    }
+    if(flag==6){
+      textArea.innerHTML = "Analisis Termina: Correcto";
+    }else if(flag<6){
+      textArea.innerHTML = "Analisis Termina: Incorrecto";
+    }
+    console.log(flag);
+  }
+
+</script>
+ </body>
+</html>
